@@ -7,7 +7,7 @@
 
 #
 from keras.optimizers import SGD
-from keras_tools import build_vgg_model, ImageLoaderShuffled
+from keras_tools import build_vgg_model, image_loader
 from keras.utils.visualize_util import plot
 
 hdf5_path = 'train.hdf5'      # path to the hdf5 containing the training data (hdf5_builder.py)
@@ -41,7 +41,7 @@ for e in range(nb_epoch):
     print("epoch %d" % e)
     
     # load training data in an asynchronous fashion  
-    for X_train, Y_train in ImageLoaderShuffled(batch_size, hdf5_path, nb_class):
+    for X_train, Y_train in image_loader(batch_size, hdf5_path, nb_class):
         history = model.fit(X_train, Y_train, batch_size=Y_train.shape[0], nb_epoch=1, verbose=1, validation_split=0.0, validation_data=None)
         train_acc += history.history['acc'][0] * Y_train.shape[0] * 100
         sample_num += Y_train.shape[0]
