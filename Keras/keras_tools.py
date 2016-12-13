@@ -206,7 +206,7 @@ def build_vgg_model(weight_path=None, nb_class=1000, nb_fc=[4096, 4096], img_wid
     from keras.layers import Convolution2D, ZeroPadding2D, MaxPooling2D, Dropout, Flatten, Dense
     
     model = Sequential()
-    model.add(ZeroPadding2D((1, 1),input_shape=(3, img_width, img_height)))
+    model.add(ZeroPadding2D((1, 1), input_shape=(3, img_width, img_height)))
     model.add(Convolution2D(64, 3, 3, activation='relu', name='block1_conv1'))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(64, 3, 3, activation='relu', name='block1_conv2'))
@@ -336,4 +336,94 @@ def build_coupled_vgg_model(weight_path=None, nb_class=1000, nb_fc=[4096, 4096],
     if not weight_path is None:
         model.load_weights(weight_path)
         
+    return model
+
+
+def build_siamese_vgg_model(weight_path=None, nb_class=1000, nb_fc=[4096, 4096], img_width=224, img_height=224, 
+                    include_top=True, include_drop=True, include_soft=True):
+    """
+    Create two siamese VGG16 models and load the weights.
+    
+    Parameters
+    ----------
+    weight_path: string
+        A path to the model's weights to load.
+    nb_class: int
+        number of classes on softmax layer
+    nb_fc: [int int]
+        number of nodes of the two fully connected layers before the softmax layer 
+    img_width, img_height: int
+        width and heights of the input image respectively
+    include_top: bool
+        whether you want the fully connected layers or just the convolutional layers
+    include_drop: bool
+        whether you want dropout or not
+    include_soft: bool
+        whether you want softmax layer or not  
+    
+    Returns
+    -------
+    model: Keras Sequential model
+        VGG model
+    """    
+    from keras.layers import Lambda, Input, Dense, Dropout
+    from keras.models import Model
+    
+    input_l = Input(shape=(3, img_width, img_height))
+    input_r = Input(shape=(3, img_width, img_height))
+    
+    # The left branch VGG16
+    model_siamese = build_vgg_model(weight_path=None, nb_class=nb_class, nb_fc=nb_fc, img_width=img_width, img_height=img_height, 
+                    include_top=False)
+    
+    features_l = model_siamese(input_l)
+    features_r = model_siamese(input_r)
+
+    distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape, name="coupled_loss")([features_l, features_r])
+
+    if include_top:
+        x = Dense(nb_fc[0], activation='relu', name='fc1_l')(features_l)
+        if include_drop:
+            x = Dropout(0.5)(x)
+        x = Dense(nb_fc[1], activation='relu', name='fc2_l')(features_l)
+        if include_drop:
+            x = Dropout(0.5)(x)
+        if include_soft:
+            predictions_l = Dense(nb_class, activation='softmax', name='predictions_l')(x)
+                   
+    if include_top:
+        x = Dense(nb_fc[0], activation='relu', name='fc1_r')(features_r)
+        if include_drop:
+            x = Dropout(0.5)(x)
+        x = Dense(nb_fc[1], activation='relu', name='fc2_r')(features_r)
+        if include_drop:
+            x = Dropout(0.5)(x)
+        if include_soft:
+            predictions_r = Dense(nb_class, activation='softmax', name='predictions_r')(x)            
+    
+    if include_top:
+        model = Model(input=[input_l, input_r], output=[predictions_l, predictions_r, distance])
+    else:    
+        model = Model(input=[input_l, input_r], output=distance)
+        
+    # if weight_path==None load 'imagenet' weights otherwise load the weights
+    if weight_path==None:
+        from keras.applications.vgg16 import VGG16
+        model_tmp = VGG16(weights='imagenet', include_top=True)
+        for layer in model_tmp.layers:
+            if 'fc1' in layer.name and nb_fc[0] == 4096:
+                weights = layer.get_weights()
+                model.get_layer(layer.name+'_l').set_weights(weights)
+                model.get_layer(layer.name+'_r').set_weights(weights)
+            if 'fc2' in layer.name and nb_fc[1] == 4096:
+                weights = layer.get_weights()
+                model.get_layer(layer.name+'_l').set_weights(weights)
+                model.get_layer(layer.name+'_r').set_weights(weights)
+            if 'predictions' in layer.name and nb_class == 1000:
+                weights = layer.get_weights()
+                model.get_layer(layer.name+'_l').set_weights(weights)
+                model.get_layer(layer.name+'_r').set_weights(weights)                
+    else:
+        model.load_weights(weight_path)
+                
     return model
