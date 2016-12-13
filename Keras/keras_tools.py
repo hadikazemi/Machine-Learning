@@ -43,6 +43,18 @@ def coupled_loss(y_true, y_pred):
     return K.mean(y_true * K.square(y_pred))
 
 
+def contrastive_loss(y_true, y_pred):
+    """
+    A custom Keras objective function which calculates the contrastive loss. 
+    y_true should be an array which is one where both inputs (in both branches of network) are from 
+    the same class (Genuine pair) and zero otherwise (different classes or imposter pair). 
+    Then minimizing the contrastive_loss will minimize y_pred which is the Euclidean distance for genuine pairs
+    and maximize the Euclidean distance for imposter pairs.
+    """     
+    margin = 1
+    return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
+
+
 def image_loader(batch_size, hdf5_path, nb_class):
     """
     load data from a hdf5 file in an asynchronous fashion. The file should contain an array namely "images"
@@ -97,7 +109,7 @@ def image_loader(batch_size, hdf5_path, nb_class):
     hdf5_file.close()
     
    
-def coupled_image_loader(batch_size, hdf5_path, nb_class):
+def coupled_image_loader(batch_size, hdf5_path, nb_class, coupled_loss_type='euclidean'):
     """
     load data from a hdf5 file in an asynchronous fashion. The file should contain an array namely "images"
     which contains training or testing images (created with "hdf5_builder.py") as well as the training mean
@@ -111,7 +123,10 @@ def coupled_image_loader(batch_size, hdf5_path, nb_class):
         path to hdf5 file
     nb_class: int
         number of classes (to create one hot encoding from labels)
-        
+    coupled_loss: string ('euclidean' or 'contrastive')
+        whether the loss function on coupled layers is 'euclidean distance' or 'contrastive'
+            -'euclidean': the labels for coupled layer will be an array of ones which means all pairs are Genuine
+            -'contrastive': the labels for coupled layer will be loaded from the hdf5 
     Returns
     -------
     [images_l, images_r]: list of numpy arrays. shape = 2 * (batch_size, channels, image_height, image_width)
@@ -149,9 +164,14 @@ def coupled_image_loader(batch_size, hdf5_path, nb_class):
         labels = hdf5_file.root.labels[i_s:i_e]
         labels = np_utils.to_categorical(np.array(labels), nb_classes=nb_class)
         
+        if coupled_loss_type == 'euclidean':
+            label_Coupled = np.ones((labels.shape[0],1))
+        else:
+            label_Coupled = np.array(hdf5_file.root.label_Coupled[i_s:i_e])
+        
         print n,'/',len(batches_list)
             
-        yield [images_l, images_r], [labels, labels, np.ones((labels.shape[0],1))]
+        yield [images_l, images_r], [labels, labels, label_Coupled]
     hdf5_file.close()
     
         
