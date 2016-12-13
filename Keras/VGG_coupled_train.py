@@ -1,5 +1,6 @@
 #
-# Train two VGG16 models which are coupled
+# Train two VGG16 models which are coupled and we are trying to minimize the Euclidean distance between the
+# feature vectors in the coupled layer.
 # Assumed that all images and their labels are saved in a single hdf5 file using the code provided in Tools folder
 # namely "hdf5_builder_coupled.py"
 #
@@ -17,6 +18,9 @@ nb_epoch = 20                 # number of epochs
 batch_size = 40               # batch size
 save_path="vgg16-e{}.h5"      # path to a h5 file to save the trained model after each epoch
 nb_class = 129                # Number of classes 
+learning_rate_l = 1           # Learning rate of the left branch
+learning_rate_r = 1           # Learning rate of the right branch
+learning_rate_c = 0.1         # Learning rate of the coupled layer
 
 # Create two coupled VGG16 model and load the weights (coupled on their flatten layers)
 # weight_path=None means load the imagenet weights for all conv layers and FC layers (if possible)
@@ -28,7 +32,7 @@ sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 # set the model's optimizer, loss function and metrics
 model.compile(optimizer=sgd,
                    loss={"predictions_l": 'categorical_crossentropy', "predictions_r": 'categorical_crossentropy', 'coupled_loss': coupled_loss},
-                   loss_weights={"predictions_l": 1., "predictions_r": 1., 'coupled_loss': 0.1}, metrics = ['accuracy'])
+                   loss_weights={"predictions_l": learning_rate_l, "predictions_r": learning_rate_r, 'coupled_loss': learning_rate_c}, metrics = ['accuracy'])
 
 # Plot the model into an image file
 if visualize:
