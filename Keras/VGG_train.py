@@ -19,8 +19,8 @@ save_path="vgg16-e{}.h5"      # path to a h5 file to save the trained model afte
 nb_class = 129                # Number of classes 
 
 # Create a VGG16 model and load the weights
-# weigth_path=None means load the imagenet weights for all conv layers and FC layers (if possible)
-model = build_vgg_model(weigth_path=None, nb_class=nb_class, nb_fc=[512, 512])
+# weight_path=None means load the imagenet weights for all conv layers and FC layers (if possible)
+model = build_vgg_model(weight_path=None, nb_class=nb_class, nb_fc=[512, 512])
 
 # Stochastic Gradient Decent optimizer
 sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
