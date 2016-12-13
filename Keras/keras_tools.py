@@ -55,7 +55,7 @@ def contrastive_loss(y_true, y_pred):
     return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
 
 
-def image_loader(batch_size, hdf5_path, nb_class):
+def image_loader(batch_size, hdf5_path, nb_class, is_training=True):
     """
     load data from a hdf5 file in an asynchronous fashion. The file should contain an array namely "images"
     which contains training or testing images (created with "hdf5_builder.py") as well as the training mean
@@ -69,6 +69,8 @@ def image_loader(batch_size, hdf5_path, nb_class):
         path to hdf5 file
     nb_class: int
         number of classes (to create one hot encoding from labels)
+    is_training: bool
+        whether it is the training phase or not (to look for training mean in the hdf5 file) 
         
     Returns
     -------
@@ -77,10 +79,13 @@ def image_loader(batch_size, hdf5_path, nb_class):
     labels: numpy array. shape =(batch_size, nb_class)
         Batch labels
     """
-    # open the hdf5 file and read the training mean
+    # open the hdf5 file 
     hdf5_file = tables.open_file(hdf5_path, mode='r')
-    mm = hdf5_file.root.mean[0]
-    mm = mm[np.newaxis, ...]
+    
+    # if the hdf5 file is for the training it will look for the training mean
+    if is_training:
+        mm = hdf5_file.root.mean[0]
+        mm = mm[np.newaxis, ...]
     
     # Total number of samples
     data_num = hdf5_file.root.images.shape[0]
@@ -97,7 +102,9 @@ def image_loader(batch_size, hdf5_path, nb_class):
         i_e = min([(i+1) * batch_size, data_num])   # index of the last image in this batch
         
         # read batch images and remove training mean
-        images = hdf5_file.root.images[i_s:i_e] - mm
+        images = hdf5_file.root.images[i_s:i_e] 
+        if is_training:
+            images -= mm
         
         # read labels and convert to one hot encoding
         labels = hdf5_file.root.labels[i_s:i_e]
@@ -109,7 +116,7 @@ def image_loader(batch_size, hdf5_path, nb_class):
     hdf5_file.close()
     
    
-def coupled_image_loader(batch_size, hdf5_path, nb_class, coupled_loss_type='euclidean'):
+def coupled_image_loader(batch_size, hdf5_path, nb_class, coupled_loss_type='euclidean', is_training=True):
     """
     load data from a hdf5 file in an asynchronous fashion. The file should contain an array namely "images"
     which contains training or testing images (created with "hdf5_builder.py") as well as the training mean
@@ -126,7 +133,9 @@ def coupled_image_loader(batch_size, hdf5_path, nb_class, coupled_loss_type='euc
     coupled_loss: string ('euclidean' or 'contrastive')
         whether the loss function on coupled layers is 'euclidean distance' or 'contrastive'
             -'euclidean': the labels for coupled layer will be an array of ones which means all pairs are Genuine
-            -'contrastive': the labels for coupled layer will be loaded from the hdf5 
+            -'contrastive': the labels for coupled layer will be loaded from the hdf5
+    is_training: bool
+        whether it is the training phase or not (to look for training mean in the hdf5 file) 
     Returns
     -------
     [images_l, images_r]: list of numpy arrays. shape = 2 * (batch_size, channels, image_height, image_width)
@@ -136,11 +145,12 @@ def coupled_image_loader(batch_size, hdf5_path, nb_class, coupled_loss_type='euc
     """
     # open the hdf5 file and read the training means
     hdf5_file = tables.open_file(hdf5_path, mode='r')
-    ml = hdf5_file.root.mean_l[0]
-    ml = ml[np.newaxis, ...]
-    
-    mr = hdf5_file.root.mean_r[0]
-    mr = mr[np.newaxis, ...]    
+    if is_training:
+        ml = hdf5_file.root.mean_l[0]
+        ml = ml[np.newaxis, ...]
+        
+        mr = hdf5_file.root.mean_r[0]
+        mr = mr[np.newaxis, ...]    
     
     # Total number of samples
     data_num = hdf5_file.root.images_l.shape[0]
@@ -157,9 +167,12 @@ def coupled_image_loader(batch_size, hdf5_path, nb_class, coupled_loss_type='euc
         i_e = min([(i+1) * batch_size, data_num])   # index of the last image in this batch
         
         # read batch images and remove training mean
-        images_l = hdf5_file.root.images_l[i_s:i_e] - ml
-        images_r = hdf5_file.root.images_r[i_s:i_e] - mr
-        
+        images_l = hdf5_file.root.images_l[i_s:i_e]
+        images_r = hdf5_file.root.images_r[i_s:i_e]
+        if is_training:
+            images_l -= ml
+            images_r -= mr
+            
         # read labels and convert to one hot encoding
         labels = hdf5_file.root.labels[i_s:i_e]
         labels = np_utils.to_categorical(np.array(labels), nb_classes=nb_class)
