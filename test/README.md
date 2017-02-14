@@ -1,57 +1,3 @@
----
-title: Image Convolution
-viewport: 'width=device-width, initial-scale=1'
----
-
-<div id="page-wrapper">
-
-<div id="header">
-
--   [Home](../../../index.php)
--   [&gt;](#)
--   [Image Processing & Computer Vision](../../computer_vision.php)
--   [&gt;](#)
--   [Basics](../basics.html)
-
-</div>
-
-<div class="section wrapper style1">
-
-<div class="container">
-
-<div class="row 200%">
-
-<div class="4u 12u(narrower)">
-
-<div id="sidebar">
-
-<div class="section">
-
-### ![](../../../_images/logo2.png) [Machine Learning Guru](../../../index.php){#logo}
-
-Machine Learning and Computer Vision tutorials using open source
-packages.
-
-</div>
-
-<div class="section">
-
-### Sections
-
--   [Introduction](#intro)
--   [Convolution](#convolution)
--   [More Filters](#edge)
-
-</div>
-
-</div>
-
-</div>
-
-<div class="8u 12u(narrower) important(narrower)">
-
-<div id="content">
-
 Image Filtering
 ---------------
 
@@ -127,14 +73,10 @@ library in python:
 
 Load and plot an image
 
-</div>
-
-<div id="pycode" class="panel-body">
-
 **Note:** *skimage* load grayscale images in \[0-1\] scale instead of
 \[0-255\].
 
-``` {data-enlighter-group="code1" data-enlighter-title="python Code"}
+``` python
 from skimage import io, viewer
 img = io.imread('image.jpg', as_grey=True)  # load the image as grayscale
 print 'image matrix size: ', img.shape      # print the size of image
