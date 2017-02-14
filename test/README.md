@@ -40,7 +40,6 @@ You can load and plot the image as a **Numpy** array using **skimage**
 library in python:
 
 
-Load and plot an image
 **Note:** *skimage* load grayscale images in \[0-1\] scale instead of
 \[0-255\].
 
@@ -111,17 +110,8 @@ technique. However, you might be able to end up with a better contrast
 neglecting the zero padding. The following python code convolves an
 image with the sharpen kernel and plots the result:
 
-<div class="panel panel-default">
 
-<div class="panel-heading">
-
-Convolve the sharpen kernel with an image
-
-</div>
-
-<div id="pycode" class="panel-body">
-
-``` {data-enlighter-group="code2" data-enlighter-title="python Code"}
+```python
 from skimage import io, color
 import matplotlib.pyplot as plt
 import numpy as np
@@ -173,7 +163,7 @@ plt.axis('off')
 plt.show()
 ```
 
-``` {data-enlighter-group="code2" data-enlighter-title="Output" data-enlighter-language="shell" data-enlighter-linenumbers="false"}
+```shell
  First 5 columns and rows of the image_sharpen matrix: 
 [[ 320.  206.  198.  188.  182.]
  [ 210.   89.  111.  101.  112.]
@@ -182,53 +172,18 @@ plt.show()
  [ 217.  108.  112.   95.   85.]]
 ```
 
-</div>
-
-</div>
-
 and you can see the filtered image after applying **sharpen** filter in
 Figure 6 and the filtered image after Histogram Equalization in Figure
 7.
 
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
-
 [![](../../../_images/topics/computer_vision/basics/convolution/sharpen.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/sharpen.jpg)
-<div class="desc">
-
 **Figure 6:** Sharpened image
 
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
 
 [![](../../../_images/topics/computer_vision/basics/convolution/sharpen_eq.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/sharpen_eq.jpg)
-<div class="desc">
-
 **Figure 7:** Sharpened image after Histogram Equalization
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 So far, we have been using our own convolution function which was not
 written to be efficient. Hopefully, you can easily find well written
@@ -237,17 +192,7 @@ which are related to machine learning and image processing. Here is our
 previous code but using [Scipy]{.inner_shadow} or
 [OpenCV]{.inner_shadow} built-in functions.
 
-<div class="panel panel-default">
-
-<div class="panel-heading">
-
-Convolve the sharpen kernel with an image using python packages
-
-</div>
-
-<div id="pycode" class="panel-body">
-
-``` {data-enlighter-group="code3" data-enlighter-title="Scipy"}
+```python
 import numpy as np
 import scipy
 from skimage import io, color
@@ -270,7 +215,7 @@ plt.axis('off')
 plt.show()
 ```
 
-``` {data-enlighter-group="code3" data-enlighter-title="OpenCV"}
+```python
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -292,11 +237,7 @@ plt.axis('off')
 plt.show()
 ```
 
-</div>
-
-</div>
-
-More Filters {#edge}
+More Filters
 ------------
 
 There are many other filters which are really useful in image processing
@@ -310,121 +251,67 @@ detection filters to our image and see the result. Here is the kernel:
 
 and here is the python code:
 
-<div class="panel panel-default">
+```python
+import numpy as np
+import scipy.signal
+import matplotlib.pyplot as plt
+from skimage import io, color
+from skimage import exposure
 
-<div class="panel-heading">
+img = io.imread('image.png')    # Load the image
+img = color.rgb2gray(img)       # Convert the image to grayscale (1 channel)
 
-Convolve an edge detection kernel with an image
+kernel = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
+# we use 'valid' which means we do not add zero padding to our image
+edges = scipy.signal.convolve2d(img, kernel, 'valid')
+print '\n First 5 columns and rows of the image_sharpen matrix: \n', image_sharpen[:5,:5]*255
 
-</div>
-
-<div id="pycode" class="panel-body">
-
-    import numpy as np
-    import scipy.signal
-    import matplotlib.pyplot as plt
-    from skimage import io, color
-    from skimage import exposure
-
-    img = io.imread('image.png')    # Load the image
-    img = color.rgb2gray(img)       # Convert the image to grayscale (1 channel)
-
-    kernel = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
-    # we use 'valid' which means we do not add zero padding to our image
-    edges = scipy.signal.convolve2d(img, kernel, 'valid')
-    print '\n First 5 columns and rows of the image_sharpen matrix: \n', image_sharpen[:5,:5]*255
-
-    # Adjust the contrast of the filtered image by applying Histogram Equalization
-    edges_equalized = exposure.equalize_adapthist(edges/np.max(np.abs(edges)), clip_limit=0.03)
-    plt.imshow(edges_equalized, cmap=plt.cm.gray)    # plot the edges_clipped
-    plt.axis('off')
-    plt.show()
-
-</div>
-
-</div>
+# Adjust the contrast of the filtered image by applying Histogram Equalization
+edges_equalized = exposure.equalize_adapthist(edges/np.max(np.abs(edges)), clip_limit=0.03)
+plt.imshow(edges_equalized, cmap=plt.cm.gray)    # plot the edges_clipped
+plt.axis('off')
+plt.show()
+```
 
 and here is what you will see when you run the code:
 
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
 
 [![](../../../_images/topics/computer_vision/basics/convolution/edges.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/edges.jpg)
-<div class="desc">
-
 **Figure 7:** Filtered image
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 What about if we apply the edge detection kernel to the output of
 sharpen filter? Let's have a look at it:
 
-<div class="panel panel-default">
+```python
+import numpy as np
+import scipy.signal
+import matplotlib.pyplot as plt
+from skimage import io, color
+from skimage import exposure
 
-<div class="panel-heading">
+img = io.imread('image.png')    # Load the image
+img = color.rgb2gray(img)       # Convert the image to grayscale (1 channel)
 
-Apply sharpen and edge detection filters back to back
+# apply sharpen filter to the original image
+sharpen_kernel = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
+image_sharpen = scipy.signal.convolve2d(img, sharpen_kernel, 'valid')
 
-</div>
+edge_kernel = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
+edges = scipy.signal.convolve2d(image_sharpen, edge_kernel, 'valid')
 
-<div id="pycode" class="panel-body">
+# Adjust the contrast of the filtered image by applying Histogram Equalization
+edges_equalized = exposure.equalize_adapthist(edges/np.max(np.abs(edges)), clip_limit=0.03)
 
-    import numpy as np
-    import scipy.signal
-    import matplotlib.pyplot as plt
-    from skimage import io, color
-    from skimage import exposure
-
-    img = io.imread('image.png')    # Load the image
-    img = color.rgb2gray(img)       # Convert the image to grayscale (1 channel)
-
-    # apply sharpen filter to the original image
-    sharpen_kernel = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
-    image_sharpen = scipy.signal.convolve2d(img, sharpen_kernel, 'valid')
-
-    edge_kernel = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
-    edges = scipy.signal.convolve2d(image_sharpen, edge_kernel, 'valid')
-
-    # Adjust the contrast of the filtered image by applying Histogram Equalization
-    edges_equalized = exposure.equalize_adapthist(edges/np.max(np.abs(edges)), clip_limit=0.03)
-
-    plt.imshow(edges_equalized, cmap=plt.cm.gray)    # plot the edges_clipped
-    plt.axis('off')
-    plt.show()
-
-</div>
-
-</div>
-
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
+plt.imshow(edges_equalized, cmap=plt.cm.gray)    # plot the edges_clipped
+plt.axis('off')
+plt.show()
+```
 
 [![](../../../_images/topics/computer_vision/basics/convolution/edge2.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/edge2.jpg)
 <div class="desc">
-
 **Figure 8:** Filtered image
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 As we mentioned before, sharpen filter bolds the edges but with the cost
 of adding noise to the image. You can clearly see these effects
@@ -434,117 +321,40 @@ noisy image and reduce the noise. Blur filter could be a smart choise:
 \$Kernel = \\dfrac{1}{9}\\begin{bmatrix} 1 & 1 & 1 \\\\ 1 & 1 & 1 \\\\ 1
 & 1 & 1 \\end{bmatrix}\$
 
-<div class="panel panel-default">
+```python
+import numpy as np
+import scipy.signal
+import matplotlib.pyplot as plt
+from skimage import io, color
+from skimage import exposure
 
-<div class="panel-heading">
+img = io.imread('image.png')    # Load the image
+img = color.rgb2gray(img)       # Convert the image to grayscale (1 channel)
 
-Apply blur filter to denoise an image
+# apply sharpen filter to the original image
+sharpen_kernel = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
+image_sharpen = scipy.signal.convolve2d(img, sharpen_kernel, 'valid')
 
-</div>
+# apply edge detection filter to the sharpen image
+edge_kernel = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
+edges = scipy.signal.convolve2d(image_sharpen, edge_kernel, 'valid')
 
-<div id="pycode" class="panel-body">
+# apply blur filter to the edge detection filtered image
+blur_kernel = np.array([[1,1,1],[1,1,1],[1,1,1]])/9.0;
+denoised = scipy.signal.convolve2d(edges, blur_kernel, 'valid')
 
-    import numpy as np
-    import scipy.signal
-    import matplotlib.pyplot as plt
-    from skimage import io, color
-    from skimage import exposure
+# Adjust the contrast of the filtered image by applying Histogram Equalization
+denoised_equalized = exposure.equalize_adapthist(denoised/np.max(np.abs(denoised)), clip_limit=0.03)
 
-    img = io.imread('image.png')    # Load the image
-    img = color.rgb2gray(img)       # Convert the image to grayscale (1 channel)
-
-    # apply sharpen filter to the original image
-    sharpen_kernel = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
-    image_sharpen = scipy.signal.convolve2d(img, sharpen_kernel, 'valid')
-
-    # apply edge detection filter to the sharpen image
-    edge_kernel = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
-    edges = scipy.signal.convolve2d(image_sharpen, edge_kernel, 'valid')
-
-    # apply blur filter to the edge detection filtered image
-    blur_kernel = np.array([[1,1,1],[1,1,1],[1,1,1]])/9.0;
-    denoised = scipy.signal.convolve2d(edges, blur_kernel, 'valid')
-
-    # Adjust the contrast of the filtered image by applying Histogram Equalization
-    denoised_equalized = exposure.equalize_adapthist(denoised/np.max(np.abs(denoised)), clip_limit=0.03)
-
-    plt.imshow(denoised_equalized, cmap=plt.cm.gray)    # plot the denoised_clipped
-    plt.axis('off')
-    plt.show()
-
-</div>
-
-</div>
-
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
+plt.imshow(denoised_equalized, cmap=plt.cm.gray)    # plot the denoised_clipped
+plt.axis('off')
+plt.show()
+```
 
 [![](../../../_images/topics/computer_vision/basics/convolution/blur.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/blur.jpg)
-<div class="desc">
-
 **Figure 9:** Denoised Image
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 \
 [Go Top](#post_top)\
 \
-<div id="disqus_thread">
-
-</div>
-
-Please enable JavaScript to view the [comments powered by
-Disqus.](https://disqus.com/?ref_noscript)
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="footer">
-
-<div class="container">
-
-<div class="row">
-
-<div class="section 3u 6u(narrower) 12u$(mobilep)">
-
-### Related Posts:
-
--   [[Twitter]{.label}](https://twitter.com/M_L_Guru){.icon .fa-twitter}
--   [[GitHub]{.label}](https://github.com/Machinelearninguru){.icon
-    .fa-github}
--   [[LinkedIn]{.label}](https://www.linkedin.com/groups/12030461){.icon
-    .fa-linkedin}
-
-<div class="copyright">
-
--   © Machine Learning Guru. All rights reserved
--   Design: [HTML5 UP](http://html5up.net)
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
