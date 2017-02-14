@@ -4,7 +4,7 @@ Image Filtering
 A comprehensive tutorial towards 2D convolution and image filtering (The
 first step to understand Convolutional Neural Networks (CNNs))
 
-Introduction {#intro}
+Introduction
 ------------
 
 Convolution is one of the most important operations in signal and image
@@ -19,64 +19,32 @@ image has 1 channel where a color image has 3 channels (for an RGB). In
 this tutorial we are going to work on a grayscale image shown in Figure
 1 and apply different convolution kernels on it.
 
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
-
 [![](../../../_images/topics/computer_vision/basics/convolution/image.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/image.jpg)
-<div class="desc">
 
 **Figure 1:** The original grayscale image
 
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 If we zoom on the very top-left corner of the image, we can see the
 pixels of the image. You can see the pixels on the top-left corner of
 the image (first five rows and five columns) and their corresponding
 values in Figure 2.
 
-<div align="center">
-
-<div class="responsive" style="padding: 0 6px;width: 80%;">
-
-<div class="img">
-
 [![](../../../_images/topics/computer_vision/basics/convolution/7.jpg){width="600"
 height="400"}](../../../_images/topics/computer_vision/basics/convolution/7.jpg)
-<div class="desc">
 
 **Figure 2:** The first 5 columns and rows of the image in Figure 1
 
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 You can load and plot the image as a **Numpy** array using **skimage**
 library in python:
 
-<div class="panel panel-default">
-
-<div class="panel-heading">
 
 Load and plot an image
-
 **Note:** *skimage* load grayscale images in \[0-1\] scale instead of
 \[0-255\].
 
-``` python
+```python
 from skimage import io, viewer
 img = io.imread('image.jpg', as_grey=True)  # load the image as grayscale
 print 'image matrix size: ', img.shape      # print the size of image
@@ -84,7 +52,7 @@ print '\n First 5 columns and rows of the image matrix: \n', img[:5,:5]*255
 viewer.ImageViewer(img).show()              # plot the image
 ```
 
-``` {data-enlighter-group="code1" data-enlighter-title="Output" data-enlighter-language="shell" data-enlighter-linenumbers="false"}
+```shell
 Image matrix size:  (897, 1168)
 
  First 5 columns and rows of the image matrix: 
@@ -94,10 +62,6 @@ Image matrix size:  (897, 1168)
  [  99.  101.  106.  104.   99.]
  [ 104.  104.  104.  100.   98.]]
 ```
-
-</div>
-
-</div>
 
 Convolution
 -----------
