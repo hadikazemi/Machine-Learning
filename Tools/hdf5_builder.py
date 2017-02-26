@@ -13,7 +13,8 @@ from random import shuffle
 
 # Parameters to set 
 data_order = 'th'               # 'th' for Theano, 'tf' for Tensorflow
-img_dtype = np.dtype(np.uint8)  # dtype in which the images will be saved
+img_dtype = tables.UInt8Atom()  # dtype in which the images will be saved
+mean_dtype = tables.Float32Atom()  # dtype in which the images will be saved
 shuffle_data = True             # shuffle the addresses before saving 
 hdf5_path = 'dataset.hdf5'      # address to save the hdf5 file
 addrs_file = 'addresses.pkl'    # path to a pickle file which contains image addresses and labels
@@ -38,8 +39,8 @@ elif data_order == 'tf':
 
 # open a hdf5 file and create earrays
 hdf5_file = tables.open_file(hdf5_path, mode='w')
-image_storage = hdf5_file.create_earray(hdf5_file.root, 'images', tables.Atom.from_dtype(img_dtype), shape=data_shape)
-mean_storage = hdf5_file.create_earray(hdf5_file.root, 'mean', tables.Atom.from_dtype(np.dtype(float)), shape=data_shape)
+image_storage = hdf5_file.create_earray(hdf5_file.root, 'images', img_dtype, shape=data_shape)
+mean_storage = hdf5_file.create_earray(hdf5_file.root, 'mean', mean_dtype, shape=data_shape)
 
 # create labels array and copy the labels data in it
 hdf5_file.create_array(hdf5_file.root, 'labels', labels)
