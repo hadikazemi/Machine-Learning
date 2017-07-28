@@ -1,7 +1,7 @@
 
 # PyTorch Tutorials
 
-A series of PyTorch Tutorials for Deep Learning and Computer Vision.
+A series of short and easy to follow PyTorch Tutorials for Deep Learning and Computer Vision.
 
 ## Table of Contents
 
