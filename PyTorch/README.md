@@ -1,5 +1,6 @@
-
-<img src="https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg" width=800 height=218 />
+<p align="center">
+<img src="https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg" width=600 height=160 />
+</p>
 
 # PyTorch Tutorials
 
