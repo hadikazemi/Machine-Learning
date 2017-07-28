@@ -1,5 +1,5 @@
 
-![PyTorch Tutorials](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg?raw=true){:height="218px" width="800px"}
+<img src='https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg width=800 height=218 />
 
 # PyTorch Tutorials
 
