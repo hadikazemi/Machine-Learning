@@ -91,7 +91,7 @@ class VGG16(nn.Module):
 vgg16 = VGG16(10)
 vgg16.cuda()
 
-reader = tf.train.NewCheckpointReader('/home/hadi/Projects/pytorch/vgg_16.ckpt')
+reader = tf.train.NewCheckpointReader('.../vgg_16.ckpt')
 debug_string = reader.debug_string()
 
 # load the weights from the ckpt file (TensorFlow format)
