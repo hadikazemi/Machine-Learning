@@ -1,5 +1,5 @@
 
-![PyTorch Tutorials](/images/pytorch.jpg?raw=true)
+![PyTorch Tutorials](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg?raw=true)
 
 # PyTorch Tutorials
 
