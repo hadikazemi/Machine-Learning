@@ -116,7 +116,7 @@ for l in list(vgg16.state_dict()):
 
 vgg16.load_state_dict(load_dic)
 
-image = imread('apple.jpg')
+image = imread('../images/apple.jpg')
 image = transform.resize(image, (224, 224, 3), preserve_range=True)
 _R_MEAN = 123.68
 _G_MEAN = 116.78
