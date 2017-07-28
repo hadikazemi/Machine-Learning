@@ -3,7 +3,7 @@
 A series of deep learning Tutorials in TensorFlow, PyTorch, and Keras.
 
 
-* [PyTorch](https://github.com/hadikazemi/Machine-Learning/tree/master/PyTorch) - 10 Tutorials
+* [PyTorch](https://github.com/hadikazemi/Machine-Learning/tree/master/PyTorch) - 11 Tutorials
 
 
 * [TensorFlow](https://github.com/hadikazemi/Machine-Learning/tree/master/Tensorflow) - 4 Tutorials
