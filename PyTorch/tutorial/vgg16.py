@@ -47,7 +47,7 @@ class VGG16(nn.Module):
         self.fc7 = nn.Linear(4096, 4096)
         self.fc8 = nn.Linear(4096, 1000)
 
-    def forward(self, x):
+    def forward(self, x, training=True):
         x = F.relu(self.conv1_1(x))
         x = F.relu(self.conv1_2(x))
         x = self.pool(x)
@@ -68,15 +68,15 @@ class VGG16(nn.Module):
         x = self.pool(x)
         x = x.view(-1, 7 * 7 * 512)
         x = F.relu(self.fc6(x))
-        x = F.dropout(x, 0.5)
+        x = F.dropout(x, 0.5, training=training)
         x = F.relu(self.fc7(x))
-        x = F.dropout(x, 0.5)
+        x = F.dropout(x, 0.5, training=training)
         x = self.fc8(x)
         return x
 
     def predict(self, x):
         # a function to predict the labels of a batch of inputs
-        x = F.softmax(self.forward(x))
+        x = F.softmax(self.forward(x, training=False))
         return x
 
     def accuracy(self, x, y):

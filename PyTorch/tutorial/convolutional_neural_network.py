@@ -59,7 +59,7 @@ class CNN(nn.Module):
         self.layer2 = nn.Linear(64, 64)
         self.layer3 = nn.Linear(64, n_classes)
 
-    def forward(self, x):
+    def forward(self, x, training=True):
         # the autoencoder has 3 con layers and 3 deconv layers (transposed conv). All layers but the last have ReLu
         # activation function
         x = F.relu(self.conv1(x))
@@ -70,15 +70,15 @@ class CNN(nn.Module):
         x = self.pool(x)
         x = x.view(-1, 4 * 4 * 8)
         x = F.relu(self.layer1(x))
-        x = F.dropout(x, 0.5)
+        x = F.dropout(x, 0.5, training=training)
         x = F.relu(self.layer2(x))
-        x = F.dropout(x, 0.5)
+        x = F.dropout(x, 0.5, training=training)
         x = self.layer3(x)
         return x
 
     def predict(self, x):
         # a function to predict the labels of a batch of inputs
-        x = F.softmax(self.forward(x))
+        x = F.softmax(self.forward(x, training=False))
         return x
 
     def accuracy(self, x, y):

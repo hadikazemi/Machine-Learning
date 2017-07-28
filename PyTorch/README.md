@@ -6,7 +6,7 @@
 
 A series of short and easy to follow PyTorch Tutorials for Deep Learning and Computer Vision.
 
-## Table of Contents
+## List of Tutorials
 
 * [Linear Regression](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/tutorial/linear_regression.py) - Linear Regression on Boston Dataset.
 * [Logistic Regression](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/tutorial/logistic_regression.py) - Logistic Regression for MNIST classification.

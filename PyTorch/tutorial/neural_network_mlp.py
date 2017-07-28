@@ -40,19 +40,19 @@ class MLP(nn.Module):
         self.layer2 = nn.Linear(128, 128)
         self.layer3 = nn.Linear(128, n_classes)
 
-    def forward(self, x):
+    def forward(self, x, training=True):
         # a neural network with 2 hidden layers
         # x -> FC -> relu -> dropout -> FC -> relu -> dropout -> FC -> output
         x = F.relu(self.layer1(x))
-        x = F.dropout(x, 0.5)
+        x = F.dropout(x, 0.5, training=training)
         x = F.relu(self.layer2(x))
-        x = F.dropout(x, 0.5)
+        x = F.dropout(x, 0.5, training=training)
         x = self.layer3(x)
         return x
 
     def predict(self, x):
         # a function to predict the labels of a batch of inputs
-        x = F.softmax(self.forward(x))
+        x = F.softmax(self.forward(x, training=False))
         return x
 
     def accuracy(self, x, y):

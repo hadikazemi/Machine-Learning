@@ -45,7 +45,7 @@ class LogisticRegression(nn.Module):
 
     def predict(self, x):
         # a function to predict the labels of a batch of inputs
-        x = F.softmax(self.forward(x))
+        x = F.softmax(self.forward(x, training=False))
         return x
 
     def accuracy(self, x, y):
