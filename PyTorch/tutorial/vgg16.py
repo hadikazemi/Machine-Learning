@@ -8,8 +8,9 @@ import numpy as np
 from imagenet_classes import class_names
 import tensorflow as tf
 from skimage import transform
-
-# download vgg16 weights here: https://github.com/tensorflow/models/tree/master/slim
+import os
+import tarfile
+import urllib
 
 batch_size = 500   # Number of samples in each batch
 epoch_num = 4      # Number of epochs to train the network
@@ -91,7 +92,18 @@ class VGG16(nn.Module):
 vgg16 = VGG16(10)
 vgg16.cuda()
 
-reader = tf.train.NewCheckpointReader('.../vgg_16.ckpt')
+# Download weights
+if not os.path.isdir('weights'):
+    os.makedirs('weights')
+if not os.path.isfile('weights/vgg_16.ckpt'):
+    print('Downloading the checkpoint ...')
+    urllib.urlretrieve("http://download.tensorflow.org/models/vgg_16_2016_08_28.tar.gz", "weights/vgg_16_2016_08_28.tar.gz")
+    with tarfile.open('weights/vgg_16_2016_08_28.tar.gz', "r:gz") as tar:
+        tar.extractall('weights/')
+    os.remove('weights/vgg_16_2016_08_28.tar.gz')
+    print('Download is complete !')
+
+reader = tf.train.NewCheckpointReader('weights/vgg_16.ckpt')
 debug_string = reader.debug_string()
 
 # load the weights from the ckpt file (TensorFlow format)
