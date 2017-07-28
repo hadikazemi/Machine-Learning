@@ -1,5 +1,5 @@
 
-<img src='https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg width=800 height=218 />
+<img src="https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg" width=800 height=218 />
 
 # PyTorch Tutorials
 
