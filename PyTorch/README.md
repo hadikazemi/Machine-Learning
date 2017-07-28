@@ -1,4 +1,6 @@
 
+![PyTorch Tutorials](/images/pytorch.jpg?raw=true)
+
 # PyTorch Tutorials
 
 A series of short and easy to follow PyTorch Tutorials for Deep Learning and Computer Vision.
