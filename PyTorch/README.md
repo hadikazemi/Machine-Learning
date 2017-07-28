@@ -1,5 +1,5 @@
 
-![PyTorch Tutorials](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg?raw=true = 218x800)
+![PyTorch Tutorials](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/images/pytorch.jpg?raw=true){:height="218px" width="800px"}
 
 # PyTorch Tutorials
 
