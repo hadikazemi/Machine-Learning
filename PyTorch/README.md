@@ -9,7 +9,7 @@ A series of short and easy to follow PyTorch Tutorials for Deep Learning and Com
 ## List of Tutorials
 
 | Title        | Description           |
-| ------------- |:-------------:|
+| ------------- |-------------|
 | [Linear Regression](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/tutorial/linear_regression.py) | Linear Regression on Boston Dataset. |
 | [Logistic Regression](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/tutorial/logistic_regression.py) | Logistic Regression for MNIST classification. |
 | [Neural Network (MLP)](https://github.com/hadikazemi/Machine-Learning/blob/master/PyTorch/tutorial/neural_network_mlp.py) | Multi Layer Perceptron (MLP) for for MNIST classification. |
