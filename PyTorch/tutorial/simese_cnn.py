@@ -88,7 +88,7 @@ def next_pair(batch_number, is_train=True):
 
 
 class CNN(nn.Module):
-    def __init__(self, n_classes):
+    def __init__(self):
         super(CNN, self).__init__()
         # conv layers: (in_channel size, out_channels size, kernel_size, stride, padding)
         self.cnn = nn.Sequential(
@@ -113,7 +113,7 @@ class CNN(nn.Module):
 
 
 # define the CNN and move the network into GPU
-cnn = CNN(10)
+cnn = CNN()
 cnn.cuda()
 
 # calculate the number of batches per epoch
