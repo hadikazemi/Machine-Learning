@@ -60,6 +60,8 @@ else:
             temp.extend(list(new_state))
             temp.extend([reward, int(done)])
             replay.push(temp)
+            # python 3
+            # replay.push([*decode(state), action, *decode(new_state), reward, int(done)])
             total_reward += reward
 
             if len(replay.memory) > batch_size:
