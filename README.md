@@ -10,3 +10,6 @@ A series of deep learning Tutorials in TensorFlow, PyTorch, and Keras.
 
 
 * [Keras](https://github.com/hadikazemi/Machine-Learning/tree/master/Keras) - 5 Tutorials
+
+
+* [Papers](Papers/)
