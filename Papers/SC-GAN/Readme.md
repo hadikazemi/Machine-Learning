@@ -5,5 +5,18 @@ Put all images of your dataset in a folder and set the address in SC-GAN.py.
 
 ## Results
 
-Shoes
+###Bedroom
+
+![alt text](images/lsun.png)
+
+###Kitchen
+
+![alt text](images/kitchen.png)
+
+###Bags
+
+![alt text](images/bags.png)
+
+###Shoes
+
 ![alt text](images/shoes.png)
