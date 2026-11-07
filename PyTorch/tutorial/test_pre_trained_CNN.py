@@ -96,8 +96,8 @@ cnn.cuda()
 features, labels = next_batch(train=False)
 print('\n \n Test accuracy before weights loading: ', cnn.accuracy(features, labels))
 
-cnn.load_state_dict(torch.load('./cnn.pth'))
-a = torch.load('./cnn.pth')
+cnn.load_state_dict(torch.load('./cnn.pth', weights_only=True))
+a = torch.load('./cnn.pth', weights_only=True)
 
 # test the accuracy on a batch of test data
 features, labels = next_batch(train=False)
